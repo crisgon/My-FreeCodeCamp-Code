@@ -6,7 +6,6 @@ const $url = "https://en.wikipedia.org/w/api.php?&origin=*&action=opensearch&nam
 const $input_search = $('.input-search');
 const $button_search = $('.button-search');
 const $result_list =  $('.results');
-let results;
 let resultsFormated;
 
 function app() {
@@ -14,19 +13,14 @@ function app() {
     init() {
       $button_search.addEventListener('click', async function(event){
         event.preventDefault();
-        await startSearch($input_search.value);
+        let results = await startSearch($input_search.value);
         await createHTML(formatResults(results));
       });
     }
   };
 
   async function startSearch(nameSearch){
-    let conect = await fetch($url + nameSearch);
-    let response = await conect.json();
-    results = [];
-    await response.forEach(function(result){
-      results.push(result);
-     });
+    return await fetch($url + nameSearch).then(response => response.json());
   }
   
   function formatResults(results) {
